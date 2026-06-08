@@ -1,0 +1,9 @@
+{
+  "name": "kerrycare-beauty-studio",
+  "version": "1.0.0",
+  "description": "Kerry Care Beauty Studio — Sistema de citas y recordatorios WhatsApp",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "@netlify/functions": "^2.0.0"
+  }
+}
