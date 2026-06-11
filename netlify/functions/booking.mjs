@@ -6,19 +6,23 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-// service_role key → acceso completo, solo usar en servidor
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY,
-  { db: { schema: 'kerrycare' } }
-);
-
 export default async (req) => {
   if (req.method !== 'POST') {
     return new Response('Método no permitido', { status: 405 });
   }
 
   try {
+    // Inicializar dentro del handler para que el try/catch cubra errores de config
+    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_KEY) {
+      console.error('Env vars faltantes: SUPABASE_URL o SUPABASE_SERVICE_KEY');
+      return Response.json({ error: 'Configuración incompleta en servidor' }, { status: 500 });
+    }
+
+    const supabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_KEY,
+      { db: { schema: 'kerrycare' } }
+    );
     const { nombre, telefono, servicio, fecha, hora, mensaje } = await req.json();
 
     if (!nombre || !telefono || !servicio || !fecha || !hora) {
