@@ -295,7 +295,7 @@
       const msgWA = encodeURIComponent(
         `Hola ${c.nombre} es para confirmar tu cita de ${c.servicio} a las ${hora12}.`
       );
-      const urlWA = `https://wa.me/${telWA}?text=${msgWA}`;
+      const urlWA = `whatsapp://send?phone=${telWA}&text=${msgWA}`;
 
       const badgeRec = c.recordatorio_enviado
         ? '<span class="badge-rec badge-enviado">✓ Enviado</span>'
