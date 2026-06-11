@@ -48,6 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const result = await resp.json();
 
         if (resp.ok && result.ok) {
+          // Descargar .ics para agregar al calendario
+          descargarICS(data);
           // Mostrar mensaje de éxito
           form.style.display = 'none';
           formSuccess.style.display = 'flex';
@@ -61,6 +63,45 @@ document.addEventListener('DOMContentLoaded', () => {
         btnSubmit.disabled = false;
       }
     });
+  }
+
+  /* ── Generador de archivo .ics ── */
+  function descargarICS({ nombre, servicio, fecha, hora }) {
+    // Convertir fecha y hora a formato iCal: YYYYMMDDTHHMMSS
+    const [y, m, d] = fecha.split('-');
+    const [hh, mm]  = hora.split(':');
+    const dtStart   = `${y}${m}${d}T${hh}${mm}00`;
+    const endHour   = String(parseInt(hh) + 1).padStart(2, '0');
+    const dtEnd     = `${y}${m}${d}T${endHour}${mm}00`;
+    const uid       = `kerrycare-${Date.now()}@kerrycare.netlify.app`;
+
+    const ics = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Kerry Care Beauty Studio//ES',
+      'BEGIN:VEVENT',
+      `UID:${uid}`,
+      `DTSTART:${dtStart}`,
+      `DTEND:${dtEnd}`,
+      `SUMMARY:Cita Kerry Care — ${servicio}`,
+      `DESCRIPTION:Hola ${nombre}\\, tu cita de ${servicio} en Kerry Care Beauty Studio.`,
+      'LOCATION:Kerry Care Beauty Studio\\, Alajuelita\\, San José',
+      'BEGIN:VALARM',
+      'TRIGGER:-PT1H',
+      'ACTION:DISPLAY',
+      `DESCRIPTION:Recordatorio: cita de ${servicio} en 1 hora`,
+      'END:VALARM',
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+
+    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `cita-kerrycare-${fecha}.ics`;
+    a.click();
+    URL.revokeObjectURL(url);
   }
 
 });

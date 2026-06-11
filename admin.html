@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel Admin — Kerry Care</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;600;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:  #1a3060;
+      --gold:  #c8a050;
+      --blush: #e8b4b8;
+      --dark:  #0d0d0d;
+      --gray:  #666;
+      --light: #f9f6f2;
+      --white: #ffffff;
+      --red:   #d94f4f;
+      --green: #3aaa6e;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Quicksand', sans-serif; background: var(--light); color: var(--dark); min-height: 100vh; }
+
+    /* ── LOGIN ── */
+    .login-wrap {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: var(--navy);
+    }
+    .login-card {
+      background: var(--white); border-radius: 16px; padding: 48px 40px;
+      width: 100%; max-width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,.25); text-align: center;
+    }
+    .login-logo { font-family: 'Inconsolata', monospace; font-size: 1.4rem; color: var(--navy); font-weight: 700; letter-spacing: .04em; }
+    .login-sub  { font-size: .8rem; color: var(--gold); letter-spacing: .12em; text-transform: uppercase; margin-top: 4px; }
+    .login-divider { height: 1px; background: var(--blush); margin: 24px 0; }
+    .login-card label { display: block; text-align: left; font-size: .8rem; font-weight: 600; color: var(--gray); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .06em; }
+    .login-card input {
+      width: 100%; padding: 12px 14px; border: 1.5px solid #ddd; border-radius: 8px;
+      font-family: 'Quicksand', sans-serif; font-size: .95rem; margin-bottom: 16px;
+      outline: none; transition: border .2s;
+    }
+    .login-card input:focus { border-color: var(--navy); }
+    .btn-login {
+      width: 100%; padding: 13px; background: var(--navy); color: var(--white);
+      border: none; border-radius: 8px; font-family: 'Inconsolata', monospace;
+      font-size: 1rem; font-weight: 700; letter-spacing: .06em; cursor: pointer; transition: background .2s;
+    }
+    .btn-login:hover { background: #24408a; }
+    .login-error { color: var(--red); font-size: .85rem; margin-top: 12px; display: none; }
+
+    /* ── DASHBOARD ── */
+    .dashboard { display: none; }
+    .top-bar {
+      background: var(--navy); color: var(--white);
+      padding: 16px 32px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .top-bar-brand { font-family: 'Inconsolata', monospace; font-size: 1.1rem; font-weight: 700; letter-spacing: .04em; }
+    .top-bar-sub   { font-size: .75rem; color: var(--gold); letter-spacing: .1em; }
+    .btn-logout {
+      background: transparent; border: 1.5px solid rgba(255,255,255,.4); color: var(--white);
+      border-radius: 6px; padding: 7px 16px; font-family: 'Quicksand', sans-serif;
+      font-size: .85rem; cursor: pointer; transition: all .2s;
+    }
+    .btn-logout:hover { background: rgba(255,255,255,.1); }
+
+    .dash-body { padding: 32px; max-width: 1100px; margin: 0 auto; }
+
+    .filtros { display: flex; gap: 10px; margin-bottom: 28px; flex-wrap: wrap; align-items: center; }
+    .filtro-label { font-size: .8rem; color: var(--gray); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+    .btn-filtro {
+      padding: 8px 18px; border-radius: 20px; border: 1.5px solid #ddd; background: var(--white);
+      font-family: 'Quicksand', sans-serif; font-size: .85rem; cursor: pointer; transition: all .2s; font-weight: 500;
+    }
+    .btn-filtro.active, .btn-filtro:hover { background: var(--navy); color: var(--white); border-color: var(--navy); }
+
+    .stats { display: flex; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+    .stat-card {
+      background: var(--white); border-radius: 12px; padding: 20px 24px;
+      flex: 1; min-width: 140px; box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+    .stat-num   { font-family: 'Inconsolata', monospace; font-size: 2rem; font-weight: 700; color: var(--navy); }
+    .stat-label { font-size: .8rem; color: var(--gray); margin-top: 4px; }
+
+    .tabla-wrap { background: var(--white); border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,.07); overflow: hidden; }
+    .tabla-titulo { padding: 20px 24px; border-bottom: 1px solid #f0ece8; font-family: 'Inconsolata', monospace; font-size: 1rem; font-weight: 700; color: var(--navy); }
+
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      padding: 12px 16px; text-align: left; font-size: .75rem; text-transform: uppercase;
+      letter-spacing: .08em; color: var(--gray); background: #faf8f5;
+      border-bottom: 1px solid #ede9e4; font-family: 'Inconsolata', monospace; font-weight: 600;
+    }
+    td { padding: 14px 16px; border-bottom: 1px solid #f5f2ee; font-size: .9rem; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fdf9f5; }
+
+    .badge-fecha { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: .78rem; font-family: 'Inconsolata', monospace; font-weight: 600; }
+    .badge-hoy    { background: #fff3cd; color: #856404; }
+    .badge-manana { background: #d1ecf1; color: #0c5460; }
+    .badge-otro   { background: #f0ece8; color: var(--gray); }
+
+    .badge-rec { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: .75rem; font-weight: 600; }
+    .badge-enviado   { background: #d4edda; color: #155724; }
+    .badge-pendiente { background: #f8d7da; color: #721c24; }
+
+    .btn-wa {
+      display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px;
+      background: #25D366; color: var(--white); text-decoration: none; font-size: .82rem;
+      font-weight: 600; transition: background .2s; white-space: nowrap;
+    }
+    .btn-wa:hover { background: #1ebe5b; }
+    .btn-wa svg { width: 14px; height: 14px; fill: white; flex-shrink: 0; }
+
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--gray); }
+    .empty-state span { font-size: 2.5rem; display: block; margin-bottom: 12px; }
+    .loading { text-align: center; padding: 60px 20px; color: var(--gray); font-size: .9rem; }
+
+    @media (max-width: 700px) {
+      .top-bar, .dash-body { padding: 14px 16px; }
+      th:nth-child(5), td:nth-child(5),
+      th:nth-child(6), td:nth-child(6) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div class="login-wrap" id="login-wrap">
+  <div class="login-card">
+    <div class="login-logo">Kerry Care</div>
+    <div class="login-sub">Beauty Studio · Admin</div>
+    <div class="login-divider"></div>
+    <label for="inp-email">Correo</label>
+    <input type="email" id="inp-email" placeholder="tu@correo.com" autocomplete="email" />
+    <label for="inp-pass">Contraseña</label>
+    <input type="password" id="inp-pass" placeholder="••••••••" autocomplete="current-password" />
+    <button class="btn-login" id="btn-login">Entrar</button>
+    <div class="login-error" id="login-error">Correo o contraseña incorrectos.</div>
+  </div>
+</div>
+
+<!-- ══ DASHBOARD ══ -->
+<div class="dashboard" id="dashboard">
+  <div class="top-bar">
+    <div>
+      <div class="top-bar-brand">Kerry Care · Panel</div>
+      <div class="top-bar-sub">Gestión de citas</div>
+    </div>
+    <button class="btn-logout" id="btn-logout">Cerrar sesión</button>
+  </div>
+  <div class="dash-body">
+    <div class="filtros">
+      <span class="filtro-label">Ver:</span>
+      <button class="btn-filtro active" data-rango="hoy">Hoy</button>
+      <button class="btn-filtro" data-rango="semana">Esta semana</button>
+      <button class="btn-filtro" data-rango="todas">Próximas (3 meses)</button>
+    </div>
+    <div class="stats">
+      <div class="stat-card"><div class="stat-num" id="stat-total">—</div><div class="stat-label">Citas en el período</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-hoy">—</div><div class="stat-label">Citas hoy</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-pendientes">—</div><div class="stat-label">Sin recordatorio enviado</div></div>
+    </div>
+    <div class="tabla-wrap">
+      <div class="tabla-titulo">Citas agendadas</div>
+      <div id="tabla-contenido"><div class="loading">Cargando citas…</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Supabase JS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+  // ── Inicializar Supabase (anon key — clave pública, OK estar aquí) ──
+  const { createClient } = supabase;
+  const sb = createClient(
+    'https://qxwswkimbvyqhhmmzmh.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4d3N3bWtpbWJ2eXFoaG1tem1oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4MjAzNTMsImV4cCI6MjA5MzM5NjM1M30.7UFoTOKjfVdRlU6udhLpIRzMT2hULjcTUai6I53Ss9M'
+  );
+
+  const TODAY      = new Date().toISOString().split('T')[0];
+  const loginWrap  = document.getElementById('login-wrap');
+  const dashboard  = document.getElementById('dashboard');
+  const loginError = document.getElementById('login-error');
+  const btnLogin   = document.getElementById('btn-login');
+  let   token      = '';
+
+  // ── Revisar sesión existente al cargar ──
+  (async () => {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session?.access_token) {
+      token = session.access_token;
+      mostrarDashboard();
+    }
+  })();
+
+  // ── Login ──
+  btnLogin.addEventListener('click', async () => {
+    const email = document.getElementById('inp-email').value.trim();
+    const pass  = document.getElementById('inp-pass').value;
+    loginError.style.display = 'none';
+    btnLogin.textContent = 'Verificando…';
+    btnLogin.disabled    = true;
+
+    const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+
+    if (error || !data.session) {
+      loginError.style.display = 'block';
+      btnLogin.textContent = 'Entrar';
+      btnLogin.disabled    = false;
+      return;
+    }
+
+    token = data.session.access_token;
+    mostrarDashboard();
+  });
+
+  // Enter en inputs
+  ['inp-email','inp-pass'].forEach(id =>
+    document.getElementById(id).addEventListener('keydown', e => {
+      if (e.key === 'Enter') btnLogin.click();
+    })
+  );
+
+  // ── Logout ──
+  document.getElementById('btn-logout').addEventListener('click', async () => {
+    await sb.auth.signOut();
+    token = '';
+    dashboard.style.display = 'none';
+    loginWrap.style.display = 'flex';
+  });
+
+  function mostrarDashboard() {
+    loginWrap.style.display = 'none';
+    dashboard.style.display = 'block';
+    cargarCitas('hoy');
+  }
+
+  // ── Filtros ──
+  document.querySelectorAll('.btn-filtro').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.btn-filtro').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      cargarCitas(btn.dataset.rango);
+    });
+  });
+
+  // ── Cargar citas desde Netlify function ──
+  async function cargarCitas(rango) {
+    document.getElementById('tabla-contenido').innerHTML = '<div class="loading">Cargando citas…</div>';
+    try {
+      const r = await fetch(`/api/admin-citas?rango=${rango}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (r.status === 401) { await sb.auth.signOut(); location.reload(); return; }
+      const data = await r.json();
+      renderTabla(data.citas || []);
+    } catch {
+      document.getElementById('tabla-contenido').innerHTML =
+        '<div class="loading">Error al cargar. Recarga la página.</div>';
+    }
+  }
+
+  // ── Render tabla ──
+  function renderTabla(citas) {
+    const hoy = citas.filter(c => c.fecha === TODAY).length;
+    const sin = citas.filter(c => !c.recordatorio_enviado).length;
+    document.getElementById('stat-total').textContent      = citas.length;
+    document.getElementById('stat-hoy').textContent        = hoy;
+    document.getElementById('stat-pendientes').textContent = sin;
+
+    if (!citas.length) {
+      document.getElementById('tabla-contenido').innerHTML =
+        '<div class="empty-state"><span>📅</span>No hay citas en este período.</div>';
+      return;
+    }
+
+    const manana = (() => {
+      const d = new Date(); d.setDate(d.getDate() + 1);
+      return d.toISOString().split('T')[0];
+    })();
+
+    const filas = citas.map(c => {
+      const fechaFmt  = new Date(`${c.fecha}T12:00:00`).toLocaleDateString('es-CR', {
+        weekday: 'short', day: 'numeric', month: 'short'
+      });
+      const badgeClass = c.fecha === TODAY   ? 'badge-hoy'    :
+                         c.fecha === manana  ? 'badge-manana' : 'badge-otro';
+      const badgeLabel = c.fecha === TODAY   ? '⚡ Hoy'       :
+                         c.fecha === manana  ? '🌙 Mañana'   : fechaFmt;
+
+      const telWA  = c.telefono.startsWith('506') ? c.telefono : `506${c.telefono}`;
+      const telVis = c.telefono.startsWith('506') ? c.telefono.slice(3) : c.telefono;
+      const hora12 = formatHora(c.hora);
+
+      const msgWA = encodeURIComponent(
+        `Hola ${c.nombre} es para confirmar tu cita de ${c.servicio} a las ${hora12}.`
+      );
+      const urlWA = `https://wa.me/${telWA}?text=${msgWA}`;
+
+      const badgeRec = c.recordatorio_enviado
+        ? '<span class="badge-rec badge-enviado">✓ Enviado</span>'
+        : '<span class="badge-rec badge-pendiente">Pendiente</span>';
+
+      return `
+        <tr>
+          <td><strong>${c.nombre}</strong></td>
+          <td>${c.servicio}</td>
+          <td><span class="badge-fecha ${badgeClass}">${badgeLabel}</span></td>
+          <td>${hora12}</td>
+          <td>${telVis}</td>
+          <td>${badgeRec}</td>
+          <td>
+            <a class="btn-wa" href="${urlWA}" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.116 1.522 5.847L.057 23.882l6.198-1.625A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.894c-1.967 0-3.797-.535-5.365-1.464l-.385-.228-3.993 1.047 1.065-3.888-.251-.399A9.86 9.86 0 012.106 12C2.106 6.533 6.533 2.106 12 2.106S21.894 6.533 21.894 12 17.467 21.894 12 21.894z"/>
+              </svg>
+              Recordar
+            </a>
+          </td>
+        </tr>`;
+    }).join('');
+
+    document.getElementById('tabla-contenido').innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>Cliente</th><th>Servicio</th><th>Fecha</th>
+            <th>Hora</th><th>Teléfono</th><th>Recordatorio auto</th><th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>${filas}</tbody>
+      </table>`;
+  }
+
+  function formatHora(hora) {
+    const [h, m] = hora.split(':').map(Number);
+    const ampm   = h >= 12 ? 'PM' : 'AM';
+    return `${h % 12 || 12}:${String(m).padStart(2,'0')} ${ampm}`;
+  }
+</script>
+</body>
+</html>

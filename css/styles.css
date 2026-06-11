@@ -342,6 +342,15 @@ section { padding: 100px 56px; }
 .form-success-icon { font-size: 3rem; }
 .form-success strong { font-size: 1.2rem; font-family: 'Inconsolata', monospace; }
 .form-success p { font-size: .9rem; color: var(--gray); line-height: 1.7; }
+.form-success-cal {
+  font-size: .85rem !important;
+  color: var(--gold) !important;
+  background: rgba(200,160,80,.1);
+  border: 1px solid rgba(200,160,80,.3);
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-top: 4px;
+}
 
 /* Perks de booking */
 .booking-perks {
