@@ -369,4 +369,104 @@
         <p class="form-success-cal">📅 A continuación se descarga el archivo para agendarlo en tu calendario.</p>
       </div>
       <form class="booking-form" id="booking-form">
-       
+        <div class="form-row">
+          <div class="fg">
+            <label>Nombre completo</label>
+            <input type="text" name="nombre" placeholder="Tu nombre" required/>
+          </div>
+          <div class="fg">
+            <label>Teléfono / WhatsApp</label>
+            <input type="tel" name="telefono" placeholder="7141-1368" required/>
+          </div>
+        </div>
+        <div class="fg">
+          <label>Servicio de interés</label>
+          <select name="servicio" required>
+            <option value="" disabled selected>Selecciona un servicio</option>
+            <optgroup label="── Pestañas ──">
+              <option>Pestañas pelo a pelo clásicas — ₡16.000</option>
+              <option>Volumen Fibras Tecnológicas — desde ₡18.000</option>
+              <option>Lifting de pestañas + tinte — ₡12.000</option>
+            </optgroup>
+            <optgroup label="── Micropigmentación ──">
+              <option>Microblading</option>
+              <option>Micropigmentación efecto maquillaje</option>
+              <option>Punteo de pestañas (delineado) — ₡30.000</option>
+            </optgroup>
+            <optgroup label="── Cejas ──">
+              <option>Laminado de cejas (incluye depilación y henna) — ₡15.000</option>
+              <option>Diseño de cejas con henna</option>
+              <option>Depilación facial con hilo</option>
+            </optgroup>
+            <optgroup label="── Facial ──">
+              <option>Limpieza facial + Dermaplaning</option>
+            </optgroup>
+            <optgroup label="── Zibá Piercings ──">
+              <option>Perforación bebé y niñas</option>
+              <option>Perforación lóbulo (adultos)</option>
+              <option>Perforación cartílago / nariz</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="fg">
+            <label>Fecha preferida</label>
+            <input type="date" name="fecha" required/>
+          </div>
+          <div class="fg">
+            <label>Hora preferida</label>
+            <input type="time" name="hora" required/>
+          </div>
+        </div>
+        <div class="fg">
+          <label>Mensaje adicional</label>
+          <textarea name="mensaje" placeholder="¿Alguna consulta o detalle especial?"></textarea>
+        </div>
+        <button type="submit" class="btn-submit" id="btn-submit">Enviar solicitud</button>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand-name">Kerry Care</div>
+      <div class="footer-brand-sub">Beauty Studio</div>
+      <p class="footer-desc">Belleza, cosmética y cuidado personal en Alajuelita, Costa Rica. Micropigmentación profesional, extensiones de pestañas y más.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Servicios</h5>
+      <ul>
+        <li><a href="#servicios">Pestañas pelo a pelo</a></li>
+        <li><a href="#servicios">Microblading</a></li>
+        <li><a href="#servicios">Laminado de cejas</a></li>
+        <li><a href="#servicios">Dermaplaning</a></li>
+        <li><a href="#ziba">Zibá Piercings</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Contacto</h5>
+      <ul>
+        <li><a href="https://wa.me/50671411368">WhatsApp</a></li>
+        <li><a href="mailto:keerrycare@gmail.com">keerrycare@gmail.com</a></li>
+        <li><a href="https://instagram.com/keerry_care">@keerry_care</a></li>
+        <li><a href="https://instagram.com/ziba_piercings">@ziba_piercings</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Kerry Care Beauty Studio</span>
+    <span>Alajuelita, San José · Costa Rica</span>
+    <span>Site by <a href="https://edevcr.com" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">E+Dev</a></span>
+  </div>
+</footer>
+
+<!-- WA FLOAT -->
+<a href="whatsapp://send?phone=50671411368" class="wa-float" title="Escríbenos por WhatsApp">💬</a>
+
+<script src="js/main.js"></script>
+</body>
+</html>
