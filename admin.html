@@ -124,8 +124,26 @@
 
     @media (max-width: 700px) {
       .top-bar, .dash-body { padding: 14px 16px; }
+
+      /* Ocultar columnas menos importantes en móvil */
       th:nth-child(5), td:nth-child(5),
       th:nth-child(6), td:nth-child(6) { display: none; }
+
+      /* Tabla con scroll horizontal */
+      .tabla-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      table { min-width: 480px; }
+
+      /* Botones más compactos */
+      .btn-wa { padding: 6px 10px; font-size: .78rem; }
+      .btn-del { padding: 6px 8px; font-size: .78rem; }
+      td { padding: 10px 10px; font-size: .82rem; }
+      th { padding: 10px 10px; }
+
+      /* Stats en columna */
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+
+      /* Filtros wrap */
+      .filtros { flex-wrap: wrap; gap: 8px; }
     }
   </style>
 </head>
@@ -243,11 +261,13 @@
   }
 
   // ── Filtros ──
+  let rangoActual = 'hoy';
   document.querySelectorAll('.btn-filtro').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.btn-filtro').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      cargarCitas(btn.dataset.rango);
+      rangoActual = btn.dataset.rango;
+      cargarCitas(rangoActual);
     });
   });
 
