@@ -18,43 +18,49 @@ export default async (req) => {
     return new Response('Método no permitido', { status: 405 });
   }
 
-  const { nombre, telefono, servicio, fecha, hora, mensaje } = await req.json();
+  try {
+    const { nombre, telefono, servicio, fecha, hora, mensaje } = await req.json();
 
-  if (!nombre || !telefono || !servicio || !fecha || !hora) {
-    return Response.json({ error: 'Faltan campos requeridos' }, { status: 400 });
+    if (!nombre || !telefono || !servicio || !fecha || !hora) {
+      return Response.json({ error: 'Faltan campos requeridos' }, { status: 400 });
+    }
+
+    // Formatear teléfono con código de Costa Rica
+    const telefonoLimpio = telefono.replace(/\D/g, '');
+    const telefonoWA = telefonoLimpio.startsWith('506')
+      ? telefonoLimpio
+      : `506${telefonoLimpio}`;
+
+    // Guardar en Supabase
+    const { data, error } = await supabase
+      .from('citas')
+      .insert([{
+        nombre,
+        telefono: telefonoWA,
+        servicio,
+        fecha,
+        hora,
+        mensaje: mensaje || '',
+        recordatorio_enviado: false,
+        creado_en: new Date().toISOString()
+      }])
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Supabase error:', JSON.stringify(error));
+      return Response.json({ error: 'Error al guardar la cita', detail: error.message }, { status: 500 });
+    }
+
+    // Enviar WhatsApp de confirmación inmediata (no bloquear si falla)
+    enviarWhatsApp(telefonoWA, plantillaConfirmacion(nombre, servicio, fecha, hora)).catch(console.error);
+
+    return Response.json({ ok: true, id: data.id });
+
+  } catch (err) {
+    console.error('booking handler error:', err);
+    return Response.json({ error: 'Error interno', detail: err.message }, { status: 500 });
   }
-
-  // Formatear teléfono con código de Costa Rica
-  const telefonoLimpio = telefono.replace(/\D/g, '');
-  const telefonoWA = telefonoLimpio.startsWith('506')
-    ? telefonoLimpio
-    : `506${telefonoLimpio}`;
-
-  // Guardar en Supabase
-  const { data, error } = await supabase
-    .from('citas')
-    .insert([{
-      nombre,
-      telefono: telefonoWA,
-      servicio,
-      fecha,
-      hora,
-      mensaje: mensaje || '',
-      recordatorio_enviado: false,
-      creado_en: new Date().toISOString()
-    }])
-    .select()
-    .single();
-
-  if (error) {
-    console.error('Supabase error:', error);
-    return Response.json({ error: 'Error al guardar la cita' }, { status: 500 });
-  }
-
-  // Enviar WhatsApp de confirmación inmediata
-  await enviarWhatsApp(telefonoWA, plantillaConfirmacion(nombre, servicio, fecha, hora));
-
-  return Response.json({ ok: true, id: data.id });
 };
 
 // ── WhatsApp via Meta Cloud API ──
