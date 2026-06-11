@@ -34,6 +34,21 @@ export default async (req) => {
       ? telefonoLimpio
       : `506${telefonoLimpio}`;
 
+    // Verificar si ya hay una cita en esa fecha y hora
+    const { data: existente } = await supabase
+      .from('citas')
+      .select('id')
+      .eq('fecha', fecha)
+      .eq('hora', hora)
+      .maybeSingle();
+
+    if (existente) {
+      return Response.json(
+        { error: 'Horario no disponible. Por favor elegí otra hora.' },
+        { status: 409 }
+      );
+    }
+
     // Guardar en Supabase
     const { data, error } = await supabase
       .from('citas')

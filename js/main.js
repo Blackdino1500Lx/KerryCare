@@ -53,6 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
           // Mostrar mensaje de éxito
           form.style.display = 'none';
           formSuccess.style.display = 'flex';
+        } else if (resp.status === 409) {
+          // Horario ocupado
+          alert(result.error || 'Ese horario ya está ocupado. Por favor elegí otra hora.');
+          btnSubmit.textContent = 'Enviar solicitud';
+          btnSubmit.disabled = false;
         } else {
           throw new Error(result.error || 'Error al enviar');
         }
