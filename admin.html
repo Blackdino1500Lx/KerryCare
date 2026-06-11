@@ -111,6 +111,13 @@
     .btn-wa:hover { background: #1ebe5b; }
     .btn-wa svg { width: 14px; height: 14px; fill: white; flex-shrink: 0; }
 
+    .btn-del {
+      display: inline-flex; align-items: center; gap: 5px; padding: 7px 12px; border-radius: 8px;
+      background: #fff0f0; color: #c0392b; border: 1px solid #f5c6cb; font-size: .82rem;
+      font-weight: 600; cursor: pointer; transition: background .2s; white-space: nowrap;
+    }
+    .btn-del:hover { background: #ffd5d5; }
+
     .empty-state { text-align: center; padding: 60px 20px; color: var(--gray); }
     .empty-state span { font-size: 2.5rem; display: block; margin-bottom: 12px; }
     .loading { text-align: center; padding: 60px 20px; color: var(--gray); font-size: .9rem; }
@@ -309,7 +316,7 @@
           <td>${hora12}</td>
           <td>${telVis}</td>
           <td>${badgeRec}</td>
-          <td>
+          <td style="display:flex;gap:8px;align-items:center;">
             <a class="btn-wa" href="${urlWA}" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
@@ -317,6 +324,7 @@
               </svg>
               Recordar
             </a>
+            <button class="btn-del" onclick="eliminarCita(${c.id}, '${c.nombre}')">🗑 Eliminar</button>
           </td>
         </tr>`;
     }).join('');
@@ -337,6 +345,19 @@
     const [h, m] = hora.split(':').map(Number);
     const ampm   = h >= 12 ? 'PM' : 'AM';
     return `${h % 12 || 12}:${String(m).padStart(2,'0')} ${ampm}`;
+  }
+
+  async function eliminarCita(id, nombre) {
+    if (!confirm(`¿Eliminar la cita de ${nombre}? Esta acción no se puede deshacer.`)) return;
+    const resp = await fetch(`/api/admin-citas?id=${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (resp.ok) {
+      cargarCitas(rangoActual);
+    } else {
+      alert('Error al eliminar la cita.');
+    }
   }
 </script>
 </body>

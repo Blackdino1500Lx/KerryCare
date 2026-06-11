@@ -21,11 +21,21 @@ export default async (req) => {
     return Response.json({ error: 'No autorizado' }, { status: 401 });
   }
 
-  // Verificar que el token sea válido en Supabase Auth
   const { data: { user }, error: authError } = await supabase.auth.getUser(token);
 
   if (authError || !user) {
     return Response.json({ error: 'Sesión inválida' }, { status: 401 });
+  }
+
+  // ── DELETE: eliminar cita por id ──
+  if (req.method === 'DELETE') {
+    const url = new URL(req.url);
+    const id  = url.searchParams.get('id');
+    if (!id) return Response.json({ error: 'Falta id' }, { status: 400 });
+
+    const { error } = await supabase.from('citas').delete().eq('id', id);
+    if (error) return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({ ok: true });
   }
 
   // Rango de fechas
