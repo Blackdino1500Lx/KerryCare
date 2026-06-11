@@ -20,8 +20,7 @@ export default async (req) => {
 
     const supabase = createClient(
       process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_KEY,
-      { db: { schema: 'kerrycare' } }
+      process.env.SUPABASE_SERVICE_KEY
     );
     const { nombre, telefono, servicio, fecha, hora, mensaje } = await req.json();
 
