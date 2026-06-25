@@ -54,8 +54,11 @@ document.addEventListener('DOMContentLoaded', () => {
           form.style.display = 'none';
           formSuccess.style.display = 'flex';
         } else if (resp.status === 409) {
-          // Horario ocupado
           alert(result.error || 'Ese horario ya está ocupado. Por favor elegí otra hora.');
+          btnSubmit.textContent = 'Enviar solicitud';
+          btnSubmit.disabled = false;
+        } else if (resp.status === 429) {
+          alert('Has enviado demasiadas solicitudes. Esperá unos minutos e intentá de nuevo.');
           btnSubmit.textContent = 'Enviar solicitud';
           btnSubmit.disabled = false;
         } else {
