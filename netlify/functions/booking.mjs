@@ -6,6 +6,32 @@
 
 import { createClient } from '@supabase/supabase-js';
 
+// ── Whitelist de servicios válidos ──
+const SERVICIOS_VALIDOS = new Set([
+  // Pestañas
+  'Lifting Coreano — ₡15.000',
+  'Lifting Coreano + Tinte — ₡20.000',
+  'Extensiones Pelo a Pelo — ₡35.000',
+  'Extensiones Pelo a Pelo + Relleno — ₡40.000',
+  'Relleno de Extensiones — ₡30.000',
+  // Micropigmentación
+  'Micropigmentación de Cejas — ₡75.000',
+  'Retoque de Micropigmentación — ₡50.000',
+  'Micropigmentación Labios — ₡85.000',
+  'Micropigmentación Delineado — ₡70.000',
+  // Cejas
+  'Diseño y Depilación de Cejas — ₡8.000',
+  'Laminado de Cejas — ₡18.000',
+  // Depilación
+  'Depilación Facial Completa — ₡12.000',
+  'Depilación Labio + Mentón — ₡6.000',
+  'Depilación de Cejas — ₡5.000',
+  // Limpieza Facial
+  'Limpieza Facial Básica — ₡20.000',
+  'Limpieza Facial Profunda — ₡35.000',
+  'Limpieza Facial Premium — ₡50.000',
+]);
+
 // ── Rate limiter en memoria (persiste entre invocaciones calientes) ──
 const _rl = new Map(); // ip → [timestamp, ...]
 const RL_WINDOW  = 10 * 60 * 1000; // 10 minutos
@@ -83,8 +109,11 @@ export default async (req) => {
     }
 
     // Validación de longitudes y formatos
-    if (nombre.length > 100 || telefono.length > 20 || servicio.length > 200) {
+    if (nombre.length > 100 || telefono.length > 20) {
       return Response.json({ error: 'Datos inválidos' }, { status: 400, headers: corsHeaders });
+    }
+    if (!SERVICIOS_VALIDOS.has(servicio)) {
+      return Response.json({ error: 'Servicio no válido' }, { status: 400, headers: corsHeaders });
     }
     if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha) || !/^\d{2}:\d{2}$/.test(hora)) {
       return Response.json({ error: 'Formato de fecha u hora inválido' }, { status: 400, headers: corsHeaders });
