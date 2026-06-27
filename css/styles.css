@@ -257,29 +257,47 @@ section { padding: 100px 56px; }
 .ziba .s-title { color: var(--white); }
 .ziba .s-sub { color: rgba(255,255,255,.5); }
 .ziba .s-label { color: var(--blush); }
-.ziba-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px; margin-top: 60px;
+/* ── Dos servicios ── */
+.ziba-servicios {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 48px;
 }
-.ziba-card {
-  border: 1px solid rgba(232,180,184,.2); padding: 36px 28px;
+.ziba-svc-card {
+  border: 1px solid rgba(232,180,184,.25); padding: 36px 32px;
   transition: border-color .2s, background .2s;
 }
-.ziba-card:hover { border-color: var(--blush); background: rgba(232,180,184,.05); }
-.ziba-num {
-  font-family: 'Inconsolata', monospace;
-  font-size: 2.5rem; font-weight: 700; color: rgba(232,180,184,.15); line-height: 1; margin-bottom: 20px;
+.ziba-svc-card:hover { border-color: var(--blush); background: rgba(232,180,184,.05); }
+.ziba-svc-card h4 {
+  font-family: 'Inconsolata', monospace; font-size: 1rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px; color: var(--blush); margin-bottom: 10px;
 }
-.ziba-card h4 {
-  font-family: 'Inconsolata', monospace;
-  font-size: .9rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 1px; color: var(--blush); margin-bottom: 10px;
+.ziba-svc-card p { font-size: .88rem; color: rgba(255,255,255,.45); line-height: 1.7; }
+.ziba-svc-card .zprice {
+  margin-top: 20px; font-size: 1.25rem; font-weight: 700;
+  color: rgba(232,180,184,.9); font-family: 'Inconsolata', monospace;
 }
-.ziba-card p { font-size: .88rem; color: rgba(255,255,255,.45); line-height: 1.7; font-weight: 400; }
-.ziba-card .zprice {
-  margin-top: 16px; font-size: .82rem; font-weight: 600;
-  color: rgba(232,180,184,.7); font-family: 'Inconsolata', monospace;
+
+/* ── Qué incluye ── */
+.ziba-incluye {
+  margin-top: 40px; border-top: 1px solid rgba(232,180,184,.15); padding-top: 36px;
 }
+.ziba-incluye-titulo {
+  font-family: 'Inconsolata', monospace; font-size: .75rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .12em; color: rgba(255,255,255,.35);
+  margin-bottom: 24px;
+}
+.ziba-incluye-items {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+}
+.ziba-item {
+  display: flex; gap: 16px; align-items: flex-start;
+}
+.ziba-item-icon { font-size: 1.4rem; line-height: 1; flex-shrink: 0; margin-top: 2px; }
+.ziba-item strong {
+  display: block; font-size: .85rem; color: rgba(255,255,255,.8);
+  font-family: 'Inconsolata', monospace; text-transform: uppercase;
+  letter-spacing: .06em; margin-bottom: 4px;
+}
+.ziba-item p { font-size: .82rem; color: rgba(255,255,255,.4); line-height: 1.6; margin: 0; }
 .ziba-intro {
   display: flex;
   align-items: center;
@@ -444,6 +462,8 @@ footer { background: var(--navy-dk); color: rgba(255,255,255,.4); padding: 48px 
   .services-grid { grid-template-columns: 1fr 1fr; }
   .ziba-intro { flex-direction: column; gap: 32px; }
   .ziba-intro-img { flex: 0 0 auto; width: 100%; }
+  .ziba-servicios { grid-template-columns: 1fr; }
+  .ziba-incluye-items { grid-template-columns: 1fr; gap: 20px; }
   .booking-inner { grid-template-columns: 1fr; gap: 48px; }
   .gallery-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-inner { grid-template-columns: 1fr; gap: 32px; }
