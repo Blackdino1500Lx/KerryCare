@@ -123,6 +123,122 @@
     .empty-state span { font-size: 2.5rem; display: block; margin-bottom: 12px; }
     .loading { text-align: center; padding: 60px 20px; color: var(--gray); font-size: .9rem; }
 
+    /* ── VIEW TOGGLE ── */
+    .view-toggle {
+      display: flex; gap: 6px; background: #f0ece8; border-radius: 10px; padding: 4px;
+    }
+    .btn-view {
+      padding: 7px 18px; border-radius: 7px; border: none; background: transparent;
+      font-family: 'Quicksand', sans-serif; font-size: .85rem; font-weight: 600;
+      cursor: pointer; color: var(--gray); transition: all .18s;
+    }
+    .btn-view.active { background: var(--white); color: var(--navy); box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+
+    /* ── CALENDARIO: MES ── */
+    .cal-mes-wrap { background: var(--white); border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,.07); overflow: hidden; display: none; }
+    .cal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 24px; border-bottom: 1px solid #f0ece8;
+    }
+    .cal-titulo { font-family: 'Inconsolata', monospace; font-size: 1rem; font-weight: 700; color: var(--navy); text-transform: capitalize; }
+    .btn-cal-nav {
+      background: none; border: 1.5px solid #ddd; border-radius: 8px;
+      width: 34px; height: 34px; cursor: pointer; font-size: 1rem; color: var(--navy);
+      display: flex; align-items: center; justify-content: center; transition: all .18s;
+    }
+    .btn-cal-nav:hover { background: var(--navy); color: var(--white); border-color: var(--navy); }
+    .cal-grid-header {
+      display: grid; grid-template-columns: repeat(7, 1fr);
+      background: #faf8f5; border-bottom: 1px solid #ede9e4;
+    }
+    .cal-dow {
+      padding: 10px 0; text-align: center; font-size: .72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .08em; color: var(--gray);
+      font-family: 'Inconsolata', monospace;
+    }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+    .cal-cell {
+      min-height: 80px; padding: 8px; border-right: 1px solid #f5f2ee;
+      border-bottom: 1px solid #f5f2ee; cursor: pointer; transition: background .15s; position: relative;
+    }
+    .cal-cell:nth-child(7n) { border-right: none; }
+    .cal-cell:hover { background: #fdf9f5; }
+    .cal-cell.otro-mes { opacity: .35; pointer-events: none; }
+    .cal-cell.hoy .cal-day-num {
+      background: var(--navy); color: var(--white); border-radius: 50%;
+      width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
+    }
+    .cal-day-num { font-family: 'Inconsolata', monospace; font-size: .88rem; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+    .cal-dot {
+      display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--gold); margin: 1px;
+    }
+    .cal-cita-chip {
+      display: block; font-size: .68rem; padding: 2px 6px; border-radius: 4px;
+      background: #e8f4fd; color: #0c5460; margin-top: 2px; white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis; font-weight: 600;
+    }
+    .cal-cell.tiene-citas { background: #fffdf5; }
+
+    /* ── CALENDARIO: SEMANA ── */
+    .cal-semana-wrap { background: var(--white); border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,.07); overflow: hidden; display: none; }
+    .cal-semana-grid {
+      display: grid; grid-template-columns: repeat(7, 1fr);
+      border-top: 1px solid #f0ece8;
+    }
+    .cal-semana-col { border-right: 1px solid #f5f2ee; min-height: 300px; }
+    .cal-semana-col:last-child { border-right: none; }
+    .cal-semana-col-header {
+      padding: 12px 8px; text-align: center; background: #faf8f5;
+      border-bottom: 1px solid #ede9e4;
+    }
+    .cal-semana-dow { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--gray); font-family: 'Inconsolata', monospace; }
+    .cal-semana-date {
+      font-family: 'Inconsolata', monospace; font-size: 1.1rem; font-weight: 700;
+      color: var(--dark); margin-top: 2px;
+    }
+    .cal-semana-date.hoy-date {
+      background: var(--navy); color: var(--white); border-radius: 50%;
+      width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+      margin: 4px auto 0;
+    }
+    .cal-semana-citas { padding: 8px; }
+    .cal-semana-cita {
+      background: #f0f5ff; border-left: 3px solid var(--navy);
+      border-radius: 0 6px 6px 0; padding: 6px 8px; margin-bottom: 6px; cursor: pointer;
+    }
+    .cal-semana-cita:hover { background: #e0ebff; }
+    .cal-semana-cita-hora { font-family: 'Inconsolata', monospace; font-size: .72rem; color: var(--navy); font-weight: 700; }
+    .cal-semana-cita-nombre { font-size: .8rem; font-weight: 600; color: var(--dark); }
+    .cal-semana-cita-svc { font-size: .72rem; color: var(--gray); }
+    .cal-semana-empty { padding: 20px 8px; text-align: center; color: #ccc; font-size: .8rem; }
+
+    /* ── MODAL DE DÍA ── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 1000;
+      display: none; align-items: center; justify-content: center; padding: 24px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-card {
+      background: var(--white); border-radius: 16px; padding: 32px;
+      max-width: 480px; width: 100%; max-height: 80vh; overflow-y: auto;
+      box-shadow: 0 24px 60px rgba(0,0,0,.25);
+    }
+    .modal-titulo { font-family: 'Inconsolata', monospace; font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 20px; text-transform: capitalize; }
+    .modal-cita {
+      border: 1px solid #ede9e4; border-radius: 10px; padding: 14px 16px; margin-bottom: 12px;
+    }
+    .modal-cita-hora { font-family: 'Inconsolata', monospace; font-size: .8rem; font-weight: 700; color: var(--gold); }
+    .modal-cita-nombre { font-size: .95rem; font-weight: 700; color: var(--dark); margin: 2px 0; }
+    .modal-cita-svc { font-size: .83rem; color: var(--gray); }
+    .modal-cita-tel { font-size: .8rem; color: var(--gray); margin-top: 6px; }
+    .modal-close {
+      width: 100%; padding: 11px; background: var(--navy); color: var(--white);
+      border: none; border-radius: 8px; font-family: 'Inconsolata', monospace;
+      font-size: .9rem; font-weight: 700; cursor: pointer; margin-top: 8px; transition: background .2s;
+    }
+    .modal-close:hover { background: #24408a; }
+
     @media (max-width: 700px) {
       .top-bar, .dash-body { padding: 14px 16px; }
 
@@ -175,20 +291,70 @@
     <button class="btn-logout" id="btn-logout">Cerrar sesión</button>
   </div>
   <div class="dash-body">
-    <div class="filtros">
-      <span class="filtro-label">Ver:</span>
-      <button class="btn-filtro active" data-rango="hoy">Hoy</button>
-      <button class="btn-filtro" data-rango="semana">Esta semana</button>
-      <button class="btn-filtro" data-rango="todas">Próximas (3 meses)</button>
+
+    <!-- Controles superiores: filtros + toggle vista -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:28px;">
+      <div class="filtros" style="margin-bottom:0;" id="filtros-lista">
+        <span class="filtro-label">Ver:</span>
+        <button class="btn-filtro active" data-rango="hoy">Hoy</button>
+        <button class="btn-filtro" data-rango="semana">Esta semana</button>
+        <button class="btn-filtro" data-rango="todas">Próximas (3 meses)</button>
+      </div>
+      <div class="view-toggle">
+        <button class="btn-view active" id="btn-vista-lista">☰ Lista</button>
+        <button class="btn-view" id="btn-vista-cal-mes">📅 Mes</button>
+        <button class="btn-view" id="btn-vista-cal-sem">🗓 Semana</button>
+      </div>
     </div>
+
+    <!-- Stats -->
     <div class="stats">
       <div class="stat-card"><div class="stat-num" id="stat-total">—</div><div class="stat-label">Citas en el período</div></div>
       <div class="stat-card"><div class="stat-num" id="stat-hoy">—</div><div class="stat-label">Citas hoy</div></div>
       <div class="stat-card"><div class="stat-num" id="stat-pendientes">—</div><div class="stat-label">Sin recordatorio enviado</div></div>
     </div>
-    <div class="tabla-wrap">
-      <div class="tabla-titulo">Citas agendadas</div>
-      <div id="tabla-contenido"><div class="loading">Cargando citas…</div></div>
+
+    <!-- Vista Lista -->
+    <div id="vista-lista">
+      <div class="tabla-wrap">
+        <div class="tabla-titulo">Citas agendadas</div>
+        <div id="tabla-contenido"><div class="loading">Cargando citas…</div></div>
+      </div>
+    </div>
+
+    <!-- Vista Calendario Mes -->
+    <div class="cal-mes-wrap" id="vista-cal-mes">
+      <div class="cal-header">
+        <button class="btn-cal-nav" id="cal-mes-prev">‹</button>
+        <div class="cal-titulo" id="cal-mes-titulo">—</div>
+        <button class="btn-cal-nav" id="cal-mes-next">›</button>
+      </div>
+      <div class="cal-grid-header">
+        <div class="cal-dow">Dom</div><div class="cal-dow">Lun</div><div class="cal-dow">Mar</div>
+        <div class="cal-dow">Mié</div><div class="cal-dow">Jue</div><div class="cal-dow">Vie</div>
+        <div class="cal-dow">Sáb</div>
+      </div>
+      <div class="cal-grid" id="cal-mes-grid"></div>
+    </div>
+
+    <!-- Vista Calendario Semana -->
+    <div class="cal-semana-wrap" id="vista-cal-semana">
+      <div class="cal-header">
+        <button class="btn-cal-nav" id="cal-sem-prev">‹</button>
+        <div class="cal-titulo" id="cal-sem-titulo">—</div>
+        <button class="btn-cal-nav" id="cal-sem-next">›</button>
+      </div>
+      <div class="cal-semana-grid" id="cal-sem-grid"></div>
+    </div>
+
+  </div>
+
+  <!-- Modal día -->
+  <div class="modal-overlay" id="modal-dia">
+    <div class="modal-card">
+      <div class="modal-titulo" id="modal-dia-titulo">—</div>
+      <div id="modal-dia-citas"></div>
+      <button class="modal-close" onclick="document.getElementById('modal-dia').classList.remove('open')">Cerrar</button>
     </div>
   </div>
 </div>
@@ -386,10 +552,228 @@
     });
     if (resp.ok) {
       cargarCitas(rangoActual);
+      // Si el calendario está visible, refresca también
+      if (vistaActual !== 'lista') cargarCitasCalendario();
     } else {
       alert('Error al eliminar la cita.');
     }
   }
+
+  // ══════════════════════════════════════════════
+  // CALENDARIO
+  // ══════════════════════════════════════════════
+
+  let vistaActual  = 'lista';
+  let calMesRef    = new Date(TODAY + 'T12:00:00');
+  let calSemRef    = new Date(TODAY + 'T12:00:00');
+  let citasCalCache = [];  // cache de citas para el cal
+
+  const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const DIAS  = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+
+  // ── Toggle de vista ──
+  const btnVLista = document.getElementById('btn-vista-lista');
+  const btnVMes   = document.getElementById('btn-vista-cal-mes');
+  const btnVSem   = document.getElementById('btn-vista-cal-sem');
+
+  function setVista(v) {
+    vistaActual = v;
+    [btnVLista, btnVMes, btnVSem].forEach(b => b.classList.remove('active'));
+    document.getElementById('vista-lista').style.display      = 'none';
+    document.getElementById('vista-cal-mes').style.display    = 'none';
+    document.getElementById('vista-cal-semana').style.display = 'none';
+    document.getElementById('filtros-lista').style.visibility = v === 'lista' ? 'visible' : 'hidden';
+
+    if (v === 'lista') {
+      btnVLista.classList.add('active');
+      document.getElementById('vista-lista').style.display = 'block';
+    } else if (v === 'mes') {
+      btnVMes.classList.add('active');
+      document.getElementById('vista-cal-mes').style.display = 'block';
+      cargarCitasCalendario().then(renderMes);
+    } else {
+      btnVSem.classList.add('active');
+      document.getElementById('vista-cal-semana').style.display = 'block';
+      cargarCitasCalendario().then(renderSemana);
+    }
+  }
+
+  btnVLista.addEventListener('click', () => setVista('lista'));
+  btnVMes.addEventListener('click',   () => setVista('mes'));
+  btnVSem.addEventListener('click',   () => setVista('semana'));
+
+  // ── Cargar citas (3 meses) para calendario ──
+  async function cargarCitasCalendario() {
+    try {
+      const r = await fetch('/api/admin-citas?rango=todas', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (!r.ok) return;
+      const d = await r.json();
+      citasCalCache = d.citas || [];
+    } catch {}
+  }
+
+  // ── Helpers ──
+  function citasDeDate(d) {
+    const key = d.toISOString().split('T')[0];
+    return citasCalCache.filter(c => c.fecha === key);
+  }
+
+  function fmtHora(h) {
+    const [hh, mm] = h.split(':').map(Number);
+    return `${hh % 12 || 12}:${String(mm).padStart(2,'0')} ${hh >= 12 ? 'PM' : 'AM'}`;
+  }
+
+  // ── Vista MES ──
+  document.getElementById('cal-mes-prev').addEventListener('click', () => {
+    calMesRef.setMonth(calMesRef.getMonth() - 1);
+    renderMes();
+  });
+  document.getElementById('cal-mes-next').addEventListener('click', () => {
+    calMesRef.setMonth(calMesRef.getMonth() + 1);
+    renderMes();
+  });
+
+  function renderMes() {
+    const y = calMesRef.getFullYear();
+    const m = calMesRef.getMonth();
+    document.getElementById('cal-mes-titulo').textContent = `${MESES[m]} ${y}`;
+
+    const primerDia   = new Date(y, m, 1).getDay();   // 0=Dom
+    const diasEnMes   = new Date(y, m + 1, 0).getDate();
+    const diasMesAnt  = new Date(y, m, 0).getDate();
+
+    const grid = document.getElementById('cal-mes-grid');
+    grid.innerHTML = '';
+
+    // Celdas del mes anterior
+    for (let i = primerDia - 1; i >= 0; i--) {
+      const cell = document.createElement('div');
+      cell.className = 'cal-cell otro-mes';
+      cell.innerHTML = `<div class="cal-day-num">${diasMesAnt - i}</div>`;
+      grid.appendChild(cell);
+    }
+
+    // Celdas del mes actual
+    for (let d = 1; d <= diasEnMes; d++) {
+      const fecha  = new Date(y, m, d);
+      const citas  = citasDeDate(fecha);
+      const esHoy  = fecha.toISOString().split('T')[0] === TODAY;
+      const cell   = document.createElement('div');
+      cell.className = 'cal-cell' + (esHoy ? ' hoy' : '') + (citas.length ? ' tiene-citas' : '');
+
+      let inner = `<div class="cal-day-num">${d}</div>`;
+      if (citas.length <= 2) {
+        citas.forEach(c => {
+          inner += `<span class="cal-cita-chip">${fmtHora(c.hora)} ${esc(c.nombre.split(' ')[0])}</span>`;
+        });
+      } else {
+        inner += `<span class="cal-cita-chip">${citas.length} citas</span>`;
+      }
+      cell.innerHTML = inner;
+
+      if (citas.length) {
+        cell.addEventListener('click', () => abrirModalDia(fecha, citas));
+      }
+      grid.appendChild(cell);
+    }
+
+    // Celdas del mes siguiente para completar la grilla
+    const totalCeldas = primerDia + diasEnMes;
+    const restantes   = totalCeldas % 7 === 0 ? 0 : 7 - (totalCeldas % 7);
+    for (let i = 1; i <= restantes; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'cal-cell otro-mes';
+      cell.innerHTML = `<div class="cal-day-num">${i}</div>`;
+      grid.appendChild(cell);
+    }
+  }
+
+  // ── Vista SEMANA ──
+  document.getElementById('cal-sem-prev').addEventListener('click', () => {
+    calSemRef.setDate(calSemRef.getDate() - 7);
+    renderSemana();
+  });
+  document.getElementById('cal-sem-next').addEventListener('click', () => {
+    calSemRef.setDate(calSemRef.getDate() + 7);
+    renderSemana();
+  });
+
+  function renderSemana() {
+    // Calcular inicio de semana (domingo)
+    const dow   = calSemRef.getDay();
+    const inicio = new Date(calSemRef);
+    inicio.setDate(calSemRef.getDate() - dow);
+
+    const fin = new Date(inicio);
+    fin.setDate(inicio.getDate() + 6);
+
+    const fmtCorto = d => `${d.getDate()} ${MESES[d.getMonth()].slice(0,3)}`;
+    document.getElementById('cal-sem-titulo').textContent =
+      `${fmtCorto(inicio)} – ${fmtCorto(fin)} ${fin.getFullYear()}`;
+
+    const grid = document.getElementById('cal-sem-grid');
+    grid.innerHTML = '';
+
+    for (let i = 0; i < 7; i++) {
+      const dia   = new Date(inicio);
+      dia.setDate(inicio.getDate() + i);
+      const citas = citasDeDate(dia);
+      const esHoy = dia.toISOString().split('T')[0] === TODAY;
+
+      const dateNumHTML = esHoy
+        ? `<div class="cal-semana-date hoy-date">${dia.getDate()}</div>`
+        : `<div class="cal-semana-date">${dia.getDate()}</div>`;
+
+      let citasHTML = '';
+      if (citas.length) {
+        citas.sort((a,b) => a.hora.localeCompare(b.hora));
+        citas.forEach(c => {
+          citasHTML += `
+            <div class="cal-semana-cita" onclick='abrirModalDia(new Date("${dia.toISOString().split('T')[0]}T12:00:00"), ${JSON.stringify(citas).replace(/'/g,"&#39;")})'>
+              <div class="cal-semana-cita-hora">${fmtHora(c.hora)}</div>
+              <div class="cal-semana-cita-nombre">${esc(c.nombre)}</div>
+              <div class="cal-semana-cita-svc">${esc(c.servicio.split('—')[0].trim())}</div>
+            </div>`;
+        });
+      } else {
+        citasHTML = '<div class="cal-semana-empty">—</div>';
+      }
+
+      const col = document.createElement('div');
+      col.className = 'cal-semana-col';
+      col.innerHTML = `
+        <div class="cal-semana-col-header">
+          <div class="cal-semana-dow">${DIAS[i].slice(0,3)}</div>
+          ${dateNumHTML}
+        </div>
+        <div class="cal-semana-citas">${citasHTML}</div>`;
+      grid.appendChild(col);
+    }
+  }
+
+  // ── Modal detalle día ──
+  function abrirModalDia(fecha, citas) {
+    const titulo = fecha.toLocaleDateString('es-CR', { weekday:'long', day:'numeric', month:'long' });
+    document.getElementById('modal-dia-titulo').textContent = titulo;
+
+    citas.sort((a,b) => a.hora.localeCompare(b.hora));
+    document.getElementById('modal-dia-citas').innerHTML = citas.map(c => `
+      <div class="modal-cita">
+        <div class="modal-cita-hora">${fmtHora(c.hora)}</div>
+        <div class="modal-cita-nombre">${esc(c.nombre)}</div>
+        <div class="modal-cita-svc">${esc(c.servicio)}</div>
+        <div class="modal-cita-tel">📱 ${esc(c.telefono.startsWith('506') ? c.telefono.slice(3) : c.telefono)}</div>
+      </div>`).join('');
+
+    document.getElementById('modal-dia').classList.add('open');
+  }
+
+  // Cerrar modal al click en overlay
+  document.getElementById('modal-dia').addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('open');
+  });
 </script>
 </body>
 </html>
