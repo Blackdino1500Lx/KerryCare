@@ -10,26 +10,29 @@ import { createClient } from '@supabase/supabase-js';
 const SERVICIOS_VALIDOS = new Set([
   // Pestañas
   'Lifting Coreano — ₡15.000',
-  'Lifting Coreano + Tinte — ₡20.000',
-  'Extensiones Pelo a Pelo — ₡35.000',
-  'Extensiones Pelo a Pelo + Relleno — ₡40.000',
-  'Relleno de Extensiones — ₡30.000',
+  'Pestañas pelo a pelo Clásicas — ₡18.000',
+  'Volumen Natural — ₡20.000',
+  'Volumen Realzado — ₡22.000',
+  'Mega Volumen — ₡25.000',
   // Micropigmentación
-  'Micropigmentación de Cejas — ₡75.000',
-  'Retoque de Micropigmentación — ₡50.000',
-  'Micropigmentación Labios — ₡85.000',
-  'Micropigmentación Delineado — ₡70.000',
+  'Microblading — ₡45.000',
+  'Shading Efecto Maquillaje — ₡45.000',
+  'MicroShading (Técnica Mixta) — ₡50.000',
+  'Punteo de Pestañas (Delineado) — ₡30.000',
   // Cejas
-  'Diseño y Depilación de Cejas — ₡8.000',
-  'Laminado de Cejas — ₡18.000',
+  'Laminado de Cejas — ₡15.000',
+  'Diseño de Cejas con Henna',
   // Depilación
-  'Depilación Facial Completa — ₡12.000',
-  'Depilación Labio + Mentón — ₡6.000',
-  'Depilación de Cejas — ₡5.000',
+  'Depilación con Hilo — ₡6.000',
+  'Labio Superior y Mentón — ₡2.000',
+  'Rostro Completo — ₡10.000',
   // Limpieza Facial
-  'Limpieza Facial Básica — ₡20.000',
-  'Limpieza Facial Profunda — ₡35.000',
-  'Limpieza Facial Premium — ₡50.000',
+  'Limpieza Facial Basic — ₡10.000',
+  'Limpieza Facial Deluxe — ₡16.000',
+  'Limpieza Facial Premium — ₡20.000',
+  // Zibá Piercings
+  'Perforación Bebé y Niña — ₡22.000',
+  'Perforación Adulta — ₡18.000',
 ]);
 
 // ── Rate limiter en memoria (persiste entre invocaciones calientes) ──
