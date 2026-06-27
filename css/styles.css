@@ -259,7 +259,7 @@ section { padding: 100px 56px; }
 .ziba .s-label { color: var(--blush); }
 /* ── Layout dos columnas ── */
 .ziba-cols {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 48px; align-items: start;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 48px; align-items: center;
 }
 .ziba-col-label {
   font-family: 'Inconsolata', monospace; font-size: .72rem; font-weight: 700;
@@ -286,7 +286,7 @@ section { padding: 100px 56px; }
 
 /* Columna incluye */
 .ziba-col-incluye {
-  border-left: 1px solid rgba(232,180,184,.15); padding-left: 48px;
+  border: 1px solid rgba(232,180,184,.2); padding: 36px 32px;
   display: flex; flex-direction: column; gap: 28px;
 }
 .ziba-item { display: flex; gap: 16px; align-items: flex-start; }
@@ -461,8 +461,8 @@ footer { background: var(--navy-dk); color: rgba(255,255,255,.4); padding: 48px 
   .services-grid { grid-template-columns: 1fr 1fr; }
   .ziba-intro { flex-direction: column; gap: 32px; }
   .ziba-intro-img { flex: 0 0 auto; width: 100%; }
-  .ziba-cols { grid-template-columns: 1fr; gap: 36px; }
-  .ziba-col-incluye { border-left: none; padding-left: 0; border-top: 1px solid rgba(232,180,184,.15); padding-top: 32px; }
+  .ziba-cols { grid-template-columns: 1fr; gap: 24px; }
+  .ziba-col-incluye { padding: 28px 24px; }
   .booking-inner { grid-template-columns: 1fr; gap: 48px; }
   .gallery-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-inner { grid-template-columns: 1fr; gap: 32px; }
