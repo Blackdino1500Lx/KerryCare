@@ -288,6 +288,7 @@ section { padding: 100px 56px; }
 .ziba-col-incluye {
   border: 1px solid rgba(232,180,184,.2); padding: 36px 32px;
   display: flex; flex-direction: column; gap: 28px;
+  transform: translateY(2rem);
 }
 .ziba-item { display: flex; gap: 16px; align-items: flex-start; }
 .ziba-item-icon { font-size: 1.3rem; line-height: 1; flex-shrink: 0; margin-top: 2px; }
