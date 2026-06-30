@@ -239,6 +239,74 @@
     }
     .modal-close:hover { background: #24408a; }
 
+    /* ── DISPONIBILIDAD ── */
+    .horario-row {
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+      padding: 14px 24px; border-bottom: 1px solid #f5f2ee;
+    }
+    .horario-row:last-child { border-bottom: none; }
+    .horario-dia { font-weight: 700; width: 100px; font-size: .9rem; color: var(--dark); }
+    .horario-toggle {
+      position: relative; width: 42px; height: 24px; -webkit-appearance: none;
+      appearance: none; background: #ddd; border-radius: 12px; cursor: pointer;
+      transition: background .2s; flex-shrink: 0; border: none; outline: none;
+    }
+    .horario-toggle:checked { background: var(--green); }
+    .horario-toggle::after {
+      content: ''; position: absolute; top: 4px; left: 4px;
+      width: 16px; height: 16px; border-radius: 50%; background: white;
+      transition: left .2s; box-shadow: 0 1px 3px rgba(0,0,0,.25);
+    }
+    .horario-toggle:checked::after { left: 22px; }
+    .horario-estado { font-size: .8rem; color: var(--gray); width: 54px; }
+    .horario-time {
+      padding: 7px 10px; border: 1.5px solid #ddd; border-radius: 8px;
+      font-family: 'Inconsolata', monospace; font-size: .88rem;
+      color: var(--dark); outline: none; transition: border .2s;
+    }
+    .horario-time:disabled { opacity: .3; background: #f5f2ee; cursor: not-allowed; }
+    .horario-time:focus { border-color: var(--navy); }
+    .horario-time-label { font-size: .78rem; color: var(--gray); }
+    .btn-horario-save {
+      padding: 10px 24px; background: var(--navy); color: white;
+      border: none; border-radius: 8px; font-family: 'Inconsolata', monospace;
+      font-size: .9rem; font-weight: 700; cursor: pointer; transition: background .2s;
+    }
+    .btn-horario-save:hover { background: #24408a; }
+    .btn-horario-save:disabled { opacity: .6; cursor: not-allowed; }
+    .save-msg { margin-left: 14px; font-size: .85rem; color: var(--green); font-weight: 600; }
+    .bloqueo-form {
+      display: flex; gap: 10px; padding: 16px 24px; align-items: flex-end; flex-wrap: wrap;
+      border-top: 1px solid #f0ece8;
+    }
+    .bloqueo-form label { display: block; font-size: .75rem; color: var(--gray); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; }
+    .bloqueo-form input[type="date"],
+    .bloqueo-form input[type="text"] {
+      padding: 8px 12px; border: 1.5px solid #ddd; border-radius: 8px;
+      font-family: 'Quicksand', sans-serif; font-size: .9rem; outline: none; transition: border .2s;
+    }
+    .bloqueo-form input[type="text"] { flex: 1; min-width: 160px; }
+    .bloqueo-form input:focus { border-color: var(--navy); }
+    #btn-add-bloqueo {
+      padding: 9px 20px; background: var(--navy); color: white; border: none;
+      border-radius: 8px; font-family: 'Quicksand', sans-serif; font-weight: 600;
+      cursor: pointer; white-space: nowrap; font-size: .88rem;
+    }
+    #btn-add-bloqueo:hover { background: #24408a; }
+    .bloqueo-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 24px; border-bottom: 1px solid #f5f2ee;
+    }
+    .bloqueo-item:last-child { border-bottom: none; }
+    .bloqueo-fecha { font-family: 'Inconsolata', monospace; font-weight: 700; color: var(--navy); font-size: .9rem; }
+    .bloqueo-motivo { font-size: .83rem; color: var(--gray); margin-left: 12px; }
+    .btn-rm-bloqueo {
+      background: #fff0f0; color: #c0392b; border: 1px solid #f5c6cb;
+      border-radius: 6px; padding: 5px 10px; font-size: .78rem; cursor: pointer; font-weight: 600; transition: background .2s;
+    }
+    .btn-rm-bloqueo:hover { background: #ffd5d5; }
+    .disp-empty { padding: 16px 24px; color: var(--gray); font-size: .88rem; }
+
     @media (max-width: 700px) {
       .top-bar, .dash-body { padding: 14px 16px; }
 
@@ -304,6 +372,7 @@
         <button class="btn-view active" id="btn-vista-lista">☰ Lista</button>
         <button class="btn-view" id="btn-vista-cal-mes">📅 Mes</button>
         <button class="btn-view" id="btn-vista-cal-sem">🗓 Semana</button>
+        <button class="btn-view" id="btn-vista-horario">📋 Horario</button>
       </div>
     </div>
 
@@ -345,6 +414,36 @@
         <button class="btn-cal-nav" id="cal-sem-next">›</button>
       </div>
       <div class="cal-semana-grid" id="cal-sem-grid"></div>
+    </div>
+
+    <!-- Vista Disponibilidad / Horario -->
+    <div id="vista-horario" style="display:none;">
+
+      <div class="tabla-wrap" style="margin-bottom:20px;">
+        <div class="tabla-titulo">Horario Semanal</div>
+        <div id="horario-rows"><div class="disp-empty">Cargando…</div></div>
+        <div style="padding:16px 24px;display:flex;align-items:center;">
+          <button class="btn-horario-save" id="btn-save-horario">💾 Guardar cambios</button>
+          <span class="save-msg" id="save-msg"></span>
+        </div>
+      </div>
+
+      <div class="tabla-wrap">
+        <div class="tabla-titulo">Días Bloqueados</div>
+        <div id="bloqueados-lista"><div class="disp-empty">Cargando…</div></div>
+        <div class="bloqueo-form">
+          <div>
+            <label>Fecha a bloquear</label>
+            <input type="date" id="inp-blq-fecha"/>
+          </div>
+          <div style="flex:1;">
+            <label>Motivo (opcional)</label>
+            <input type="text" id="inp-blq-motivo" placeholder="Ej: Vacaciones, feriado..."/>
+          </div>
+          <button id="btn-add-bloqueo">+ Agregar</button>
+        </div>
+      </div>
+
     </div>
 
   </div>
@@ -566,22 +665,23 @@
   let vistaActual  = 'lista';
   let calMesRef    = new Date(TODAY + 'T12:00:00');
   let calSemRef    = new Date(TODAY + 'T12:00:00');
-  let citasCalCache = [];  // cache de citas para el cal
+  let citasCalCache = [];
 
-  const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-  const DIAS  = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const MESES     = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const DIAS      = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 
   // ── Toggle de vista ──
-  const btnVLista = document.getElementById('btn-vista-lista');
-  const btnVMes   = document.getElementById('btn-vista-cal-mes');
-  const btnVSem   = document.getElementById('btn-vista-cal-sem');
+  const btnVLista   = document.getElementById('btn-vista-lista');
+  const btnVMes     = document.getElementById('btn-vista-cal-mes');
+  const btnVSem     = document.getElementById('btn-vista-cal-sem');
+  const btnVHorario = document.getElementById('btn-vista-horario');
 
   function setVista(v) {
     vistaActual = v;
-    [btnVLista, btnVMes, btnVSem].forEach(b => b.classList.remove('active'));
-    document.getElementById('vista-lista').style.display      = 'none';
-    document.getElementById('vista-cal-mes').style.display    = 'none';
-    document.getElementById('vista-cal-semana').style.display = 'none';
+    [btnVLista, btnVMes, btnVSem, btnVHorario].forEach(b => b.classList.remove('active'));
+    ['vista-lista','vista-cal-mes','vista-cal-semana','vista-horario'].forEach(id => {
+      document.getElementById(id).style.display = 'none';
+    });
     document.getElementById('filtros-lista').style.visibility = v === 'lista' ? 'visible' : 'hidden';
 
     if (v === 'lista') {
@@ -591,16 +691,21 @@
       btnVMes.classList.add('active');
       document.getElementById('vista-cal-mes').style.display = 'block';
       cargarCitasCalendario().then(renderMes);
-    } else {
+    } else if (v === 'semana') {
       btnVSem.classList.add('active');
       document.getElementById('vista-cal-semana').style.display = 'block';
       cargarCitasCalendario().then(renderSemana);
+    } else if (v === 'horario') {
+      btnVHorario.classList.add('active');
+      document.getElementById('vista-horario').style.display = 'block';
+      cargarDisponibilidad();
     }
   }
 
-  btnVLista.addEventListener('click', () => setVista('lista'));
-  btnVMes.addEventListener('click',   () => setVista('mes'));
-  btnVSem.addEventListener('click',   () => setVista('semana'));
+  btnVLista.addEventListener('click',   () => setVista('lista'));
+  btnVMes.addEventListener('click',     () => setVista('mes'));
+  btnVSem.addEventListener('click',     () => setVista('semana'));
+  btnVHorario.addEventListener('click', () => setVista('horario'));
 
   // ── Cargar citas (3 meses) para calendario ──
   async function cargarCitasCalendario() {
@@ -774,6 +879,144 @@
   document.getElementById('modal-dia').addEventListener('click', function(e) {
     if (e.target === this) this.classList.remove('open');
   });
+
+  // ══════════════════════════════════════════════
+  // DISPONIBILIDAD — Horario semanal + días bloqueados
+  // ══════════════════════════════════════════════
+
+  let horarioLocal    = [];
+  let bloqueadosLocal = [];
+
+  async function cargarDisponibilidad() {
+    document.getElementById('horario-rows').innerHTML    = '<div class="disp-empty">Cargando…</div>';
+    document.getElementById('bloqueados-lista').innerHTML = '<div class="disp-empty">Cargando…</div>';
+
+    const [{ data: horarios }, { data: bloqueados }] = await Promise.all([
+      sb.from('horarios').select('*').order('dia_semana'),
+      sb.from('dias_bloqueados').select('*').order('fecha')
+    ]);
+
+    horarioLocal    = horarios    || [];
+    bloqueadosLocal = bloqueados  || [];
+
+    renderHorario();
+    renderBloqueados();
+  }
+
+  function renderHorario() {
+    const container = document.getElementById('horario-rows');
+    if (!horarioLocal.length) {
+      container.innerHTML = '<div class="disp-empty">No se encontró la tabla de horarios. Ejecutá el SQL de configuración en Supabase.</div>';
+      return;
+    }
+    container.innerHTML = horarioLocal.map(h => `
+      <div class="horario-row">
+        <span class="horario-dia">${DIAS[h.dia_semana]}</span>
+        <input type="checkbox" class="horario-toggle" data-dia="${h.dia_semana}"
+               ${h.activo ? 'checked' : ''}
+               onchange="toggleHorarioDia(${h.dia_semana}, this.checked)"/>
+        <span class="horario-estado" id="hest-${h.dia_semana}">${h.activo ? 'Abierto' : 'Cerrado'}</span>
+        <span class="horario-time-label">Desde</span>
+        <input type="time" class="horario-time" data-dia="${h.dia_semana}" data-campo="inicio"
+               value="${h.hora_inicio}" ${!h.activo ? 'disabled' : ''}
+               onchange="updateHorario(${h.dia_semana}, 'inicio', this.value)"/>
+        <span class="horario-time-label">Hasta</span>
+        <input type="time" class="horario-time" data-dia="${h.dia_semana}" data-campo="fin"
+               value="${h.hora_fin}" ${!h.activo ? 'disabled' : ''}
+               onchange="updateHorario(${h.dia_semana}, 'fin', this.value)"/>
+      </div>`).join('');
+  }
+
+  function toggleHorarioDia(dia, activo) {
+    const h = horarioLocal.find(x => x.dia_semana === dia);
+    if (h) h.activo = activo;
+    document.querySelectorAll(`.horario-time[data-dia="${dia}"]`)
+      .forEach(el => el.disabled = !activo);
+    const est = document.getElementById(`hest-${dia}`);
+    if (est) est.textContent = activo ? 'Abierto' : 'Cerrado';
+  }
+
+  function updateHorario(dia, campo, valor) {
+    const h = horarioLocal.find(x => x.dia_semana === dia);
+    if (h) h[campo === 'inicio' ? 'hora_inicio' : 'hora_fin'] = valor;
+  }
+
+  document.getElementById('btn-save-horario').addEventListener('click', async () => {
+    const btn = document.getElementById('btn-save-horario');
+    const msg = document.getElementById('save-msg');
+    btn.disabled = true;
+    btn.textContent = 'Guardando…';
+    msg.textContent = '';
+    msg.style.color = 'var(--green)';
+
+    try {
+      for (const h of horarioLocal) {
+        const { error } = await sb.from('horarios').update({
+          activo:      h.activo,
+          hora_inicio: h.hora_inicio,
+          hora_fin:    h.hora_fin,
+          updated_at:  new Date().toISOString()
+        }).eq('dia_semana', h.dia_semana);
+        if (error) throw error;
+      }
+      msg.textContent = '✓ Guardado';
+      setTimeout(() => { msg.textContent = ''; }, 3000);
+    } catch (e) {
+      msg.style.color = 'var(--red)';
+      msg.textContent = 'Error al guardar';
+      console.error(e);
+    }
+
+    btn.disabled = false;
+    btn.textContent = '💾 Guardar cambios';
+  });
+
+  function renderBloqueados() {
+    const container = document.getElementById('bloqueados-lista');
+    if (!bloqueadosLocal.length) {
+      container.innerHTML = '<div class="disp-empty">No hay días bloqueados.</div>';
+      return;
+    }
+    container.innerHTML = bloqueadosLocal.map(b => {
+      const fechaFmt = new Date(b.fecha + 'T12:00:00').toLocaleDateString('es-CR', {
+        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+      });
+      return `
+        <div class="bloqueo-item">
+          <div>
+            <span class="bloqueo-fecha">${b.fecha}</span>
+            ${b.motivo ? `<span class="bloqueo-motivo">— ${esc(b.motivo)}</span>` : ''}
+            <div style="font-size:.77rem;color:var(--gray);margin-top:2px;text-transform:capitalize;">${fechaFmt}</div>
+          </div>
+          <button class="btn-rm-bloqueo" onclick="eliminarBloqueo('${b.id}', '${b.fecha}')">✕ Quitar</button>
+        </div>`;
+    }).join('');
+  }
+
+  document.getElementById('btn-add-bloqueo').addEventListener('click', async () => {
+    const fecha  = document.getElementById('inp-blq-fecha').value;
+    const motivo = document.getElementById('inp-blq-motivo').value.trim();
+
+    if (!fecha) { alert('Seleccioná una fecha para bloquear.'); return; }
+
+    const { error } = await sb.from('dias_bloqueados').insert([{ fecha, motivo }]);
+    if (error) {
+      if (error.code === '23505') alert('Esa fecha ya está bloqueada.');
+      else { alert('Error al guardar.'); console.error(error); }
+      return;
+    }
+
+    document.getElementById('inp-blq-fecha').value  = '';
+    document.getElementById('inp-blq-motivo').value = '';
+    cargarDisponibilidad();
+  });
+
+  async function eliminarBloqueo(id, fecha) {
+    if (!confirm(`¿Quitar el bloqueo del ${fecha}?`)) return;
+    const { error } = await sb.from('dias_bloqueados').delete().eq('id', id);
+    if (error) { alert('Error al eliminar.'); return; }
+    cargarDisponibilidad();
+  }
 </script>
 </body>
 </html>

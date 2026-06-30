@@ -522,7 +522,21 @@
         <div class="form-row">
           <div class="fg">
             <label>Fecha preferida</label>
-            <input type="date" name="fecha" required/>
+            <div class="date-picker-wrap" id="date-picker">
+              <div class="dp-header">
+                <button type="button" class="dp-nav-btn" id="dp-prev">‹</button>
+                <span class="dp-month-label" id="dp-month-label">—</span>
+                <button type="button" class="dp-nav-btn" id="dp-next">›</button>
+              </div>
+              <div class="dp-dow-row">
+                <span class="dp-dow">Dom</span><span class="dp-dow">Lun</span><span class="dp-dow">Mar</span>
+                <span class="dp-dow">Mié</span><span class="dp-dow">Jue</span><span class="dp-dow">Vie</span>
+                <span class="dp-dow">Sáb</span>
+              </div>
+              <div class="dp-days-grid" id="dp-days-grid"></div>
+              <div class="dp-selected-text" id="dp-selected-text">Selecciona una fecha disponible</div>
+            </div>
+            <input type="hidden" name="fecha" id="inp-fecha"/>
           </div>
           <div class="fg">
             <label>Hora preferida</label>

@@ -368,6 +368,52 @@ section { padding: 100px 56px; }
 }
 .btn-submit:hover { background: var(--navy-lt); }
 
+/* ─── DATE PICKER ─── */
+.date-picker-wrap {
+  border: 1.5px solid #e0dbd5; background: var(--white);
+  border-radius: 2px; padding: 14px 16px; user-select: none;
+}
+.dp-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;
+}
+.dp-nav-btn {
+  background: none; border: 1.5px solid #ddd; border-radius: 4px;
+  width: 28px; height: 28px; cursor: pointer; font-size: .9rem;
+  color: var(--navy); display: flex; align-items: center; justify-content: center;
+  transition: all .15s; padding: 0;
+}
+.dp-nav-btn:hover { background: var(--navy); color: white; border-color: var(--navy); }
+.dp-month-label {
+  font-family: 'Inconsolata', monospace; font-size: .9rem;
+  font-weight: 700; color: var(--navy); text-transform: capitalize; letter-spacing: .02em;
+}
+.dp-dow-row {
+  display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 4px;
+}
+.dp-dow {
+  text-align: center; font-size: .6rem; text-transform: uppercase;
+  letter-spacing: .06em; color: var(--gray); padding: 3px 0; font-weight: 600;
+  font-family: 'Inconsolata', monospace;
+}
+.dp-days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.dp-day {
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  font-size: .8rem; border-radius: 3px; transition: all .12s;
+}
+.dp-day.dp-disponible {
+  cursor: pointer; color: var(--dark); font-weight: 600;
+}
+.dp-day.dp-disponible:hover { background: var(--gold); color: white; }
+.dp-day.dp-hoy { background: rgba(200,160,80,.12); color: var(--gold); font-weight: 700; }
+.dp-day.dp-hoy:hover { background: var(--gold); color: white; }
+.dp-day.dp-selected { background: var(--navy) !important; color: white !important; font-weight: 700; }
+.dp-day.dp-no-disponible { color: #ccc; cursor: not-allowed; font-weight: 400; }
+.dp-selected-text {
+  margin-top: 10px; font-size: .78rem; color: var(--gray); text-align: center; min-height: 18px;
+  font-family: 'Inconsolata', monospace; letter-spacing: .03em;
+}
+.dp-selected-text.has-date { color: var(--navy); font-weight: 700; }
+
 /* ─── FORM SUCCESS ─── */
 .form-success {
   display: flex; flex-direction: column; align-items: center;

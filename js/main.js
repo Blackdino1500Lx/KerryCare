@@ -10,11 +10,93 @@ document.addEventListener('DOMContentLoaded', () => {
     nav.style.padding = window.scrollY > 60 ? '12px 56px' : '20px 56px';
   });
 
-  /* ── Fecha mínima = hoy ── */
-  const dateInput = document.querySelector('input[type="date"]');
-  if (dateInput) {
-    dateInput.setAttribute('min', new Date().toISOString().split('T')[0]);
+  /* ══════════════════════════════════════════
+     DATE PICKER — calendario con disponibilidad
+  ══════════════════════════════════════════ */
+  const MESES_DP = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                    'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+  let dpRef  = new Date();          // mes visible
+  dpRef.setDate(1);
+  let dpDisp = null;                // { horarios, diasBloqueados }
+
+  function dpDiaDisponible(fecha) {
+    const hoy = new Date(); hoy.setHours(0,0,0,0);
+    if (fecha < hoy) return false;  // pasado
+    if (!dpDisp) return true;       // aún cargando → todo disponible
+    const dow = fecha.getDay();
+    const horario = dpDisp.horarios.find(h => h.dia_semana === dow);
+    if (!horario || !horario.activo) return false;
+    const fechaStr = `${fecha.getFullYear()}-${String(fecha.getMonth()+1).padStart(2,'0')}-${String(fecha.getDate()).padStart(2,'0')}`;
+    return !dpDisp.diasBloqueados.includes(fechaStr);
   }
+
+  function dpRender() {
+    const grid  = document.getElementById('dp-days-grid');
+    const label = document.getElementById('dp-month-label');
+    if (!grid || !label) return;
+
+    const y = dpRef.getFullYear();
+    const m = dpRef.getMonth();
+    label.textContent = `${MESES_DP[m]} ${y}`;
+
+    const hoy       = new Date(); hoy.setHours(0,0,0,0);
+    const primerDow = new Date(y, m, 1).getDay();
+    const diasEnMes = new Date(y, m + 1, 0).getDate();
+    const fechaSel  = document.getElementById('inp-fecha')?.value || '';
+
+    let html = '';
+    for (let i = 0; i < primerDow; i++) html += '<div class="dp-day"></div>';
+
+    for (let d = 1; d <= diasEnMes; d++) {
+      const fecha    = new Date(y, m, d);
+      const fechaStr = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const esHoy    = fecha.getTime() === hoy.getTime();
+      const disp     = dpDiaDisponible(fecha);
+      const selec    = fechaStr === fechaSel;
+
+      let cls = 'dp-day';
+      if (disp)  cls += ' dp-disponible';
+      else       cls += ' dp-no-disponible';
+      if (esHoy && disp) cls += ' dp-hoy';
+      if (selec) cls += ' dp-selected';
+
+      const onclick = disp ? `dpSeleccionar('${fechaStr}', ${d}, '${MESES_DP[m]}')` : '';
+      html += `<div class="${cls}"${onclick ? ` onclick="${onclick}"` : ''}>${d}</div>`;
+    }
+
+    grid.innerHTML = html;
+  }
+
+  window.dpSeleccionar = function(fechaStr, dia, mesNombre) {
+    const inp = document.getElementById('inp-fecha');
+    if (inp) inp.value = fechaStr;
+    const txt = document.getElementById('dp-selected-text');
+    if (txt) {
+      txt.textContent = `✓ ${dia} de ${mesNombre}`;
+      txt.classList.add('has-date');
+    }
+    dpRender();
+  };
+
+  document.getElementById('dp-prev')?.addEventListener('click', () => {
+    dpRef.setMonth(dpRef.getMonth() - 1);
+    dpRender();
+  });
+  document.getElementById('dp-next')?.addEventListener('click', () => {
+    dpRef.setMonth(dpRef.getMonth() + 1);
+    dpRender();
+  });
+
+  // Cargar disponibilidad y renderizar
+  (async () => {
+    dpRender(); // render inmediato sin datos (evita flash vacío)
+    try {
+      const r = await fetch('/api/disponibilidad');
+      if (r.ok) dpDisp = await r.json();
+    } catch {}
+    dpRender(); // re-render con datos reales
+  })();
 
   /* ── Formulario de citas → /api/booking ── */
   const form = document.getElementById('booking-form');
@@ -24,6 +106,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (form) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      // Validar fecha seleccionada
+      if (!form.fecha.value) {
+        alert('Por favor seleccioná una fecha disponible en el calendario.');
+        return;
+      }
 
       // Estado de carga
       btnSubmit.textContent = 'Enviando...';
