@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Bloquear panel admin a crawlers
+Disallow: /admin
+Disallow: /api/
+
+Sitemap: https://kerrycare.netlify.app/sitemap.xml
