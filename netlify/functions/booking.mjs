@@ -54,15 +54,22 @@ function checkRateLimit(ip) {
   return true;
 }
 
-const ALLOWED_ORIGIN = 'https://kerrycare.netlify.app';
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin':  ALLOWED_ORIGIN,
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-};
+const ALLOWED_ORIGINS = new Set([
+  'https://kerrycarecr.com',
+  'https://www.kerrycarecr.com',
+  'https://kerrycare.netlify.app',
+]);
 
 export default async (req) => {
+  const origin = req.headers.get('origin') || '';
+  const allowedOrigin = ALLOWED_ORIGINS.has(origin) ? origin : 'https://kerrycarecr.com';
+
+  const corsHeaders = {
+    'Access-Control-Allow-Origin':  allowedOrigin,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  };
+
   // CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: corsHeaders });
@@ -73,8 +80,7 @@ export default async (req) => {
   }
 
   // Validar Origin
-  const origin = req.headers.get('origin') || '';
-  if (origin && origin !== ALLOWED_ORIGIN) {
+  if (origin && !ALLOWED_ORIGINS.has(origin)) {
     return new Response('Forbidden', { status: 403 });
   }
 
