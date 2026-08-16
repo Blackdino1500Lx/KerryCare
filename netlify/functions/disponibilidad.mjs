@@ -1,9 +1,3 @@
-// ═══════════════════════════════════════════
-// netlify/functions/disponibilidad.mjs
-// Endpoint público — devuelve horario semanal + días bloqueados
-// GET /api/disponibilidad
-// ═══════════════════════════════════════════
-
 import { createClient } from '@supabase/supabase-js';
 
 export default async (req) => {
@@ -29,10 +23,13 @@ export default async (req) => {
 
   return Response.json({
     horarios: horarios || [],
-    diasBloqueados: (bloqueados || []).map(d => d.fecha)
+    // Normalizamos a YYYY-MM-DD por si la columna `fecha` en Supabase
+    // es timestamp/timestamptz en vez de date puro (evita que los días
+    // bloqueados no coincidan con el string que compara el front-end).
+    diasBloqueados: (bloqueados || []).map(d => String(d.fecha).slice(0, 10))
   }, {
     headers: {
-      'Cache-Control': 'public, max-age=300',
+      'Cache-Control': 'public, max-age=60',
       'Access-Control-Allow-Origin': '*'
     }
   });
