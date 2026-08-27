@@ -68,6 +68,53 @@ document.addEventListener('DOMContentLoaded', () => {
     grid.innerHTML = html;
   }
 
+  // Convierte "HH:MM" (24h) a texto legible tipo "12:00 md" / "6:00 pm"
+  function fmtHora12(hhmm) {
+    if (!hhmm) return '';
+    const [hStr, m] = hhmm.split(':');
+    let h = parseInt(hStr, 10);
+    const esMediodia = h === 12 && m === '00';
+    const esMedianoche = h === 0 && m === '00';
+    const sufijo = h < 12 ? 'am' : 'pm';
+    let h12 = h % 12; if (h12 === 0) h12 = 12;
+    if (esMediodia) return '12md';
+    if (esMedianoche) return '12mn';
+    return `${h12}:${m}${sufijo}`;
+  }
+
+  // Aplica el rango de horas permitido (hora_inicio/hora_fin) al input
+  // según el horario configurado para el día de la semana seleccionado.
+  function dpAplicarRangoHora(fechaStr) {
+    const inpHora = document.getElementById('f-hora');
+    const hint    = document.getElementById('f-hora-hint');
+    if (!inpHora) return;
+
+    if (!dpDisp) {
+      inpHora.removeAttribute('min');
+      inpHora.removeAttribute('max');
+      if (hint) hint.textContent = '';
+      return;
+    }
+
+    const [y, m, d] = fechaStr.split('-').map(Number);
+    const dow = new Date(y, m - 1, d).getDay();
+    const horario = dpDisp.horarios.find(h => h.dia_semana === dow);
+
+    if (horario && horario.activo && horario.hora_inicio && horario.hora_fin) {
+      inpHora.min = horario.hora_inicio;
+      inpHora.max = horario.hora_fin;
+      // Si ya había una hora elegida fuera del nuevo rango, se limpia
+      if (inpHora.value && (inpHora.value < horario.hora_inicio || inpHora.value > horario.hora_fin)) {
+        inpHora.value = '';
+      }
+      if (hint) hint.textContent = `Horario disponible: ${fmtHora12(horario.hora_inicio)} – ${fmtHora12(horario.hora_fin)}`;
+    } else {
+      inpHora.removeAttribute('min');
+      inpHora.removeAttribute('max');
+      if (hint) hint.textContent = '';
+    }
+  }
+
   window.dpSeleccionar = function(fechaStr, dia, mesNombre) {
     const inp = document.getElementById('inp-fecha');
     if (inp) inp.value = fechaStr;
@@ -76,6 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
       txt.textContent = `✓ ${dia} de ${mesNombre}`;
       txt.classList.add('has-date');
     }
+    dpAplicarRangoHora(fechaStr);
     dpRender();
   };
 
@@ -111,6 +159,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!form.fecha.value) {
         alert('Por favor seleccioná una fecha disponible en el calendario.');
         return;
+      }
+
+      // Validar que la hora esté dentro del horario configurado para ese día
+      // (el servidor también lo valida, pero avisamos antes de enviar)
+      const inpHora = document.getElementById('f-hora');
+      if (inpHora && inpHora.min && inpHora.max) {
+        if (form.hora.value < inpHora.min || form.hora.value > inpHora.max) {
+          alert(`Por favor elegí una hora entre ${fmtHora12(inpHora.min)} y ${fmtHora12(inpHora.max)} para ese día.`);
+          return;
+        }
       }
 
       // Estado de carga

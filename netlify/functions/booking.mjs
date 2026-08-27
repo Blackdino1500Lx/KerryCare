@@ -137,6 +137,42 @@ export default async (req) => {
       ? telefonoLimpio
       : `506${telefonoLimpio}`;
 
+    // ── Validar día bloqueado y rango de horario permitido ──
+    // (el front-end ya filtra esto, pero se re-valida acá porque
+    // el endpoint puede recibirse directo sin pasar por la UI)
+    const dow = new Date(`${fecha}T12:00:00`).getDay();
+
+    const [{ data: horario, error: eHor }, { data: bloqueo, error: eBlq }] = await Promise.all([
+      supabase.from('horarios').select('activo, hora_inicio, hora_fin').eq('dia_semana', dow).maybeSingle(),
+      supabase.from('dias_bloqueados').select('fecha').eq('fecha', fecha).maybeSingle()
+    ]);
+
+    if (eHor || eBlq) {
+      console.error('Error consultando horarios/bloqueados:', eHor || eBlq);
+      return Response.json({ error: 'Error en servidor' }, { status: 500, headers: corsHeaders });
+    }
+
+    if (bloqueo) {
+      return Response.json(
+        { error: 'Ese día no está disponible para citas.' },
+        { status: 409, headers: corsHeaders }
+      );
+    }
+
+    if (!horario || !horario.activo) {
+      return Response.json(
+        { error: 'No se atienden citas ese día de la semana.' },
+        { status: 409, headers: corsHeaders }
+      );
+    }
+
+    if (hora < horario.hora_inicio || hora > horario.hora_fin) {
+      return Response.json(
+        { error: `Ese horario está fuera del rango disponible (${horario.hora_inicio} - ${horario.hora_fin}).` },
+        { status: 409, headers: corsHeaders }
+      );
+    }
+
     // Verificar si ya hay una cita en esa fecha y hora
     const { data: existente } = await supabase
       .from('citas')
